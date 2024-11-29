@@ -1,0 +1,49 @@
+services:                           # needs xhost +local:docker before starting (do bash script)
+
+  master:                               # complete image of the butler; for backup purposes and for roscore
+    image: butler/master_test
+    build:
+      context: ./
+      dockerfile: Dockerfile.butler
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}              # Forward the display variable from the host
+      - QT_X11_NO_MITSHM=1              # Required for some GUI applications
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw 
+    tty: true
+    stdin_open: true
+    command: sh -c "catkin_make &&
+            sh"
+    network_mode: "host"                # needs to source after startup
+
+  ur5:
+    image: butler/ur5_test
+    build:
+      context: ./
+      dockerfile: Dockerfile.ur5
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}              # Forward the display variable from the host
+      - QT_X11_NO_MITSHM=1              # Required for some GUI applications
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw 
+    tty: true
+    stdin_open: true
+    command: sh
+    network_mode: "host"
+    depends_on:
+      - master
+
+#  realsense:
+#    image: butler/realsense_test
+#    build:
+#      context: ./
+ #     dockerfile: Dockerfile.realsense
+#    privileged: true     # würde container alles geben (nicht optimal)
+#    devices:       
+#      - "/dev/bus:/dev/bus"   # gibt ordner mit usb geräten an containern weiter
+#    command: roslaunch realsense2_camera rs_camera.launch --wait
+#    network_mode: host
+#    depends_on:
+#      - master
