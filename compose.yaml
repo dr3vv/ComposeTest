@@ -17,6 +17,22 @@ services:                           # needs xhost +local:docker before starting 
             sh"
     network_mode: "host"                # needs to source after startup
 
+  mir100:
+    image: butler/mir100_test
+    build:
+      context: ./mir
+      dockerfile: Dockerfile
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+    command: >
+      sh -c "export ROS_MASTER_URI=http://localhost:11311 &&
+            roscore"
+    network_mode: "host"
+    depends_on:
+      - master
+
   ur5:
     image: butler/ur5_test
     build:
@@ -26,6 +42,7 @@ services:                           # needs xhost +local:docker before starting 
     environment:
       - DISPLAY=${DISPLAY}              # Forward the display variable from the host
       - QT_X11_NO_MITSHM=1              # Required for some GUI applications
+      - DEBIANDEBIAN_FRONTEND=noninteractive
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw 
     tty: true
@@ -35,15 +52,17 @@ services:                           # needs xhost +local:docker before starting 
     depends_on:
       - master
 
-#  realsense:
-#    image: butler/realsense_test
-#    build:
-#      context: ./
- #     dockerfile: Dockerfile.realsense
-#    privileged: true     # würde container alles geben (nicht optimal)
+  realsense:
+    image: butler/realsense_test
+    build:
+      context: ./
+      dockerfile: Dockerfile.realsense
+    privileged: true     # würde container alles geben (nicht optimal)
 #    devices:       
 #      - "/dev/bus:/dev/bus"   # gibt ordner mit usb geräten an containern weiter
-#    command: roslaunch realsense2_camera rs_camera.launch --wait
-#    network_mode: host
-#    depends_on:
-#      - master
+    tty: true
+    stdin_open: true
+    command: sh
+    network_mode: host
+    depends_on:
+      - master

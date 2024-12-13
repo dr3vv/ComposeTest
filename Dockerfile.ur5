@@ -3,16 +3,13 @@ FROM ros:noetic-ros-base
 
 # Update the system and install dependencies
 RUN apt-get update && apt-get install -y \
-    python3-pip \
-    python3-catkin-tools \
-    git \
     ros-noetic-rviz \
     ros-noetic-roslaunch \
-    tmux \
-    nano \
-    libusb-1.0-0 \
+    ros-noetic-rqt-joint-trajectory-controller \
+    ros-noetic-rqt* \
     ros-noetic-ur-robot-driver \
     ros-noetic-universal-robots \
+    --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Build the workspace

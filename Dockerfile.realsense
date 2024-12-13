@@ -1,6 +1,8 @@
 # Base image: ROS Noetic
 FROM ros:noetic-ros-base
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Update the system and install dependencies
 RUN apt-get update && apt-get install -y \
     ros-noetic-rviz \
