@@ -85,6 +85,7 @@ ros-noetic-cv-bridge \
 ros-noetic-ddynamic-reconfigure \
 ros-noetic-diagnostic-updater \
 ros-noetic-librealsense2 \
+iputils-ping \
 && rm -rf /var/lib/apt/lists/*              
 #install necessities
 
