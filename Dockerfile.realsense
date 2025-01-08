@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     ros-noetic-rviz \
     ros-noetic-roslaunch \
     libusb-1.0-0 \
+    iputils-ping \
     ros-noetic-cv-bridge \
     ros-noetic-realsense2-camera \
     && rm -rf /var/lib/apt/lists/*
